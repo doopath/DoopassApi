@@ -12,6 +12,7 @@ public sealed class DoopassContext : DbContext
     public DoopassContext(DbOptions options)
     {
         _options = options;
+        Database.EnsureCreated();
     }
 
 

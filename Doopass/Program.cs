@@ -39,6 +39,8 @@ public static class Program
         Builder.Services.AddControllers();
         Builder.Services.AddEndpointsApiExplorer();
         Builder.Services.AddSwaggerGen();
+        Builder.Logging.ClearProviders();
+        Builder.Logging.AddConsole();
     }
 
     private static void ConfigureApplication()

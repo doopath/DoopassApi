@@ -1,3 +1,7 @@
+using Doopass.Entities;
+using Doopass.Exceptions;
+using Doopass.Models;
+
 namespace Doopass.Dtos.UserDto;
 
 public class NewUserDto : UserDto
@@ -6,4 +10,5 @@ public class NewUserDto : UserDto
     public override int? Id { get; set; }
     public override required string? Email { get; set; }
     public override bool IsEmailVerified { get; set; }
+    public override required string? Password { get; set; }
 }

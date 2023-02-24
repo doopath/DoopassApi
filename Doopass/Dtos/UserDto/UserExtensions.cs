@@ -10,7 +10,8 @@ public static class UserExtensions
             Name = user.Name,
             Id = user.Id,
             Email = user.Email,
-            IsEmailVerified = user.IsEmailVerified
+            IsEmailVerified = user.IsEmailVerified,
+            Password = user.Password
         };
     
     public static UpdateUserDto ToUpdateDto(this User user)
@@ -19,13 +20,15 @@ public static class UserExtensions
             Name = user.Name,
             Id = user.Id!.Value,
             Email = user.Email,
-            IsEmailVerified = user.IsEmailVerified
+            IsEmailVerified = user.IsEmailVerified,
+            Password = user.Password
         };
 
     public static void UpdateOf(this User user, UpdateUserDto from)
     {
         user.Name = from.Name ?? user.Name;
         user.Email = from.Email ?? user.Email;
+        user.Password = from.Password ?? user.Password;
         
         if (user.Email != from.Email)
             user.IsEmailVerified = false;
