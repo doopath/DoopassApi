@@ -1,0 +1,15 @@
+# Development settings
+.idea/
+.vscode/
+.fleet/
+Doopass/Properties/
+Doopass/appsettings.Development.json
+
+# Development scripts
+dbCompose.yml
+add_users.py
+
+# Build dirs
+*/bin/
+*/obj/
+publish/
