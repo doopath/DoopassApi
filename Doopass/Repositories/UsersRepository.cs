@@ -22,7 +22,7 @@ public class UsersRepository : EntityRepository<User>
     {
         await using var context = new DoopassContext(Options);
 
-        if (IsEmailExist(context, user.Email!))
+        if (DoesEmailExist(context, user.Email!))
         {
             await context.DisposeAsync();
             throw new EmailAlreadyExistsException($"User with email={user.Email} already exists!");
@@ -42,7 +42,7 @@ public class UsersRepository : EntityRepository<User>
         if (userToUpdate is null) 
             throw new EntityWasNotFoundException($"User with id={user.Id} was not found!");
 
-        if (user.Email != userToUpdate.Email && IsEmailExist(context, user.Email!))
+        if (user.Email != userToUpdate.Email && DoesEmailExist(context, user.Email!))
             throw new EmailAlreadyExistsException($"User with email={user.Email} already exists!");
 
         userToUpdate.UpdateOf(user.ToUpdateDto());
@@ -52,7 +52,7 @@ public class UsersRepository : EntityRepository<User>
         return userToUpdate;
     }
 
-    private bool IsEmailExist(DoopassContext? context, string email)
+    private bool DoesEmailExist(DoopassContext? context, string email)
     {
         return context?.Users?.AsParallel().Any(user => user.Email == email) ?? false;
     }

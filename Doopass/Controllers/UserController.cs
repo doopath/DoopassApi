@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Doopass.Repositories;
 using Doopass.Dtos.UserDto;
-using Doopass.Entities;
 using Doopass.Exceptions;
+using Doopass.Models;
 using Doopass.Options;
 using Microsoft.Extensions.Options;
 
@@ -59,16 +59,16 @@ public class UserController : BaseController
     }
 
     [HttpPost]
-    public async Task<ActionResult<NewUserDto>> UpdateUser(UpdateUserDto newUserDto)
+    public async Task<ActionResult<NewUserDto>> UpdateUser(UpdateUserDto updateUserDto)
     {
-        _logger.LogInformation("Updating user with id={Id}", newUserDto.Id!.Value);
+        _logger.LogInformation("Updating user with id={Id}", updateUserDto.Id!.Value);
         
         try
         {
-            var targetUser = await _repository.GetById(newUserDto.Id.Value);
-            var user = newUserDto.ToEntity();
+            var targetUser = await _repository.GetById(updateUserDto.Id.Value);
+            var user = updateUserDto.ToEntity();
             
-            EnsurePasswordsMatch(user, targetUser);
+            EnsurePasswordsMatch(user.Password!, targetUser.Password!);
             
             user = await _repository.Update(user);
             
@@ -79,13 +79,45 @@ public class UserController : BaseController
                                         or PasswordValidationException)
         {
             _logger.LogWarning(exc.Message);
-            return new NotFoundObjectResult(exc.Message);
+            return new ConflictObjectResult(exc.Message);
         }
     }
 
-    private void EnsurePasswordsMatch(User user, User target)
+    [HttpPost]
+    public async Task<ActionResult> UpdateUserPassword(UpdateUserPasswordDto updateUserPasswordDto)
     {
-        if (user.Password != target.Password)
+        _logger.LogWarning("Updating password of a user with id={Id}", updateUserPasswordDto.Id);
+       
+        try
+        {
+            var updates = updateUserPasswordDto.ToEntity();
+            var updatingUser = await _repository.GetById(updates.Id!.Value);
+            var oldPasswordHash = new PasswordHandler(updateUserPasswordDto.OldPassword).Hash;
+
+            EnsurePasswordsMatch(updatingUser.Password!, oldPasswordHash);
+            await _repository.Update(updates);
+
+            _logger.LogInformation(
+                "Password of the user with id={Id} has been successfully updated!", updates.Id);
+            
+            return new OkResult();
+        }
+        catch (Exception exc) when (exc is EntityWasNotFoundException
+                                        or EmailAlreadyExistsException
+                                        or PasswordValidationException)
+        {
+            _logger.LogWarning(exc.Message);
+            
+            if (exc is EntityWasNotFoundException)
+                return new NotFoundObjectResult(exc.Message);
+            
+            return new ConflictObjectResult(exc.Message);
+        }
+    }
+
+    private void EnsurePasswordsMatch(string sample, string target)
+    {
+        if (!sample.Equals(target))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }
 }

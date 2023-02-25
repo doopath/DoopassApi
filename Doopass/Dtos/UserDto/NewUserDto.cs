@@ -1,7 +1,3 @@
-using Doopass.Entities;
-using Doopass.Exceptions;
-using Doopass.Models;
-
 namespace Doopass.Dtos.UserDto;
 
 public class NewUserDto : UserDto
