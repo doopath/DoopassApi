@@ -1,5 +1,6 @@
 using Doopass.Entities;
 using Doopass.Options;
+using Microsoft.Extensions.Options;
 
 namespace Doopass.Repositories;
 
@@ -7,9 +8,9 @@ public abstract class EntityRepository<T> where T : IEntity
 {
     protected readonly DbOptions Options;
     
-    public EntityRepository(DbOptions options)
+    public EntityRepository(IOptions<DbOptions> options)
     {
-        Options = options;
+        Options = options.Value;
     }
     
     public virtual async Task Add(T entity)

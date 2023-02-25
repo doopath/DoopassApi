@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Doopass.Repositories;
 using Doopass.Dtos.UserDto;
+using Doopass.Entities;
 using Doopass.Exceptions;
 using Doopass.Models;
 using Doopass.Options;
+using Doopass.Requests.User;
+using MediatR;
 using Microsoft.Extensions.Options;
 
 namespace Doopass.Controllers;
@@ -12,32 +15,29 @@ public class UserController : BaseController
 {
     private readonly UsersRepository _repository;
     private readonly ILogger<UserController> _logger;
+    private readonly IMediator _mediator;
 
-    public UserController(IOptions<DbOptions> dbSettings, ILogger<UserController> logger)
+    public UserController(IOptions<DbOptions> dbOptions, ILogger<UserController> logger, IMediator mediator)
     {
-        _repository = new UsersRepository(dbSettings.Value);
+        _repository = new UsersRepository(dbOptions);
         _logger = logger;
+        _mediator = mediator;
     }
     
+    #region Actions
     [HttpPost]
-    public async Task<ActionResult<NewUserDto>> AddNewUser(NewUserDto newUserDto)
+    public async Task<ActionResult<UserDto>> AddNewUser(AddNewUserRequest request)
     {
-        _logger.LogInformation("Adding new user with id={Id}", newUserDto.Id!.Value);
-        
-        newUserDto.IsEmailVerified = false;
-        var user = newUserDto.ToEntity();
-        
         try
         {
-            await _repository.Add(user);
+            User user = await _mediator.Send(request);
+            return new ActionResult<UserDto>(user.ToDto());
         }
         catch (EmailAlreadyExistsException exc)
         {
             _logger.LogWarning(exc.Message);
             return new ConflictObjectResult(exc.Message);
         }
-        
-        return new ActionResult<NewUserDto>(user.ToNewDto());
     }
     
     [HttpPost]
@@ -114,7 +114,8 @@ public class UserController : BaseController
             return new ConflictObjectResult(exc.Message);
         }
     }
-
+    #endregion 
+    
     private void EnsurePasswordsMatch(string sample, string target)
     {
         if (!sample.Equals(target))

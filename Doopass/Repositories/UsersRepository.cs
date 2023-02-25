@@ -2,14 +2,16 @@ using Doopass.Dtos.UserDto;
 using Doopass.Entities;
 using Doopass.Exceptions;
 using Doopass.Options;
+using Microsoft.Extensions.Options;
 
 namespace Doopass.Repositories;
 
 public class UsersRepository : EntityRepository<User>
 {
-    public UsersRepository(DbOptions options) : base(options)
+    public UsersRepository(IOptions<DbOptions> options) : base(options)
     { }
 
+    #region Database Actions
     public async Task<User> GetById(int id)
     {
         await using var context = new DoopassContext(Options);
@@ -51,6 +53,7 @@ public class UsersRepository : EntityRepository<User>
         
         return userToUpdate;
     }
+    #endregion
 
     private bool DoesEmailExist(DoopassContext? context, string email)
     {

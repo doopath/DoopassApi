@@ -4,7 +4,7 @@ using Doopass.Models;
 
 namespace Doopass.Dtos.UserDto;
 
-public abstract class UserDto : IDto<User>
+public class UserDto : IDto<User>
 {
     public virtual string? Name { get; set; }
     public virtual int? Id { get; set; }
