@@ -13,7 +13,7 @@ public class InfoController : BaseController
     {
         _options = options.Value;
     }
-    
+
     [HttpGet]
     public ActionResult<UsageInfo> GetUsageInfo()
     {

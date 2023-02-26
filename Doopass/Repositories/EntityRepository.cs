@@ -7,12 +7,12 @@ namespace Doopass.Repositories;
 public abstract class EntityRepository<T> where T : IEntity
 {
     protected readonly DbOptions Options;
-    
+
     public EntityRepository(IOptions<DbOptions> options)
     {
         Options = options.Value;
     }
-    
+
     public virtual async Task Add(T entity)
     {
         await using var context = new DoopassContext(Options);

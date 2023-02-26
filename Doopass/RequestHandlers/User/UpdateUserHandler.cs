@@ -10,41 +10,43 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Entities.Use
 {
     private readonly ILogger<UpdateUserHandler> _logger;
     private readonly UsersRepository _repository;
-    
+
     public UpdateUserHandler(ILogger<UpdateUserHandler> logger, UsersRepository repository)
     {
         _logger = logger;
         _repository = repository;
     }
-    
+
     public async Task<Entities.User> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Updating user with id={Id}", request.Id);
 
         var user = ConvertRequestToUser(request);
         var targetUser = await _repository.GetById(user.Id!.Value);
-        
+
         EnsurePasswordsMatch(user.Password!, targetUser.Password!);
-        
+
         user = await _repository.Update(user);
 
         _logger.LogInformation("User with id={Id} has been successfully updated!", user.Id);
-        
+
         return user;
     }
-    
+
     private Entities.User ConvertRequestToUser(UpdateUserRequest request)
     {
-        return new()
+        return new Entities.User
         {
             Name = request.Name,
             Id = request.Id,
             Email = request.Email,
             IsEmailVerified = request.IsEmailVerified,
-            Password = new PasswordHandler(request.Password).Hash
+            Password = new PasswordHandler(request.Password).Hash,
+            Store = request.Store,
+            BackupsIds = request.BackupsIds
         };
     }
-    
+
     private void EnsurePasswordsMatch(string sample, string target)
     {
         if (!sample.Equals(target))

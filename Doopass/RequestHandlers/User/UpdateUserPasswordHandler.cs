@@ -10,7 +10,7 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
 {
     private readonly ILogger<UpdateUserPasswordHandler> _logger;
     private readonly UsersRepository _repository;
-    
+
     public UpdateUserPasswordHandler(ILogger<UpdateUserPasswordHandler> logger, UsersRepository repository)
     {
         _logger = logger;
@@ -19,7 +19,6 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
 
     public async Task<Unit> Handle(UpdateUserPasswordRequest request, CancellationToken cancellationToken)
     {
-        
         _logger.LogInformation("Updating password of a user with id={Id}", request.Id);
 
         var updates = ConvertRequestToUser(request);
@@ -30,20 +29,20 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
 
         _logger.LogInformation(
             "Password of the user with id={Id} has been successfully updated!", updates.Id);
-        
+
         return Unit.Value;
     }
-    
+
     private Entities.User ConvertRequestToUser(UpdateUserPasswordRequest request)
     {
         var passwordHandler = new PasswordHandler(request.NewPassword);
-        
+
         if (!passwordHandler.IsValid)
             throw new PasswordValidationException(passwordHandler.ValidationMessage!);
-        
+
         var password = passwordHandler.Hash;
-        
-        return new()
+
+        return new Entities.User
         {
             Name = null,
             Id = request.Id,
@@ -51,14 +50,16 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
             // It's ok to stay this as true. If the existing user's
             // email is not verified this will still be false.
             IsEmailVerified = true,
-            Password = password
+            Password = password,
+            Store = null,
+            BackupsIds = null
         };
     }
-    
+
     private void EnsurePasswordsMatch(Entities.User existingUser, UpdateUserPasswordRequest request)
     {
         var oldPasswordHash = new PasswordHandler(request.OldPassword).Hash;
-        
+
         if (!existingUser.Password!.Equals(oldPasswordHash))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }

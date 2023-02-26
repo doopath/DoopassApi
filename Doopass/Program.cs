@@ -9,14 +9,14 @@ public static class Program
     private static WebApplicationBuilder? Builder { get; set; }
     private static WebApplication? App { get; set; }
     private static string[]? Args { get; set; }
-    
+
     public static async Task Main(string[] args)
     {
         InitializeArguments(args);
         InitializeApplicationBuilder();
         ConfigureServices();
         ConfigureApplication();
-        await RunApplication();        
+        await RunApplication();
     }
 
     private static async Task RunApplication()
@@ -63,5 +63,6 @@ public static class Program
         App.UseStaticFiles();
         App.UseRouting();
         App.UseAuthorization();
+        App.MapControllers();
     }
 }
