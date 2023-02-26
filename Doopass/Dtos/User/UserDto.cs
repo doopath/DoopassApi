@@ -3,9 +3,9 @@ using Doopass.Entities;
 using Doopass.Exceptions;
 using Doopass.Models;
 
-namespace Doopass.Dtos.UserDto;
+namespace Doopass.Dtos.User;
 
-public class UserDto : IDto<User>
+public class UserDto : IDto<Entities.User>
 {
     [MaxLength(255)] public string? Name { get; init; }
 
@@ -21,7 +21,7 @@ public class UserDto : IDto<User>
 
     public List<int>? BackupsIds { get; set; }
 
-    public User ToEntity()
+    public Entities.User ToEntity()
     {
         var passwordHandler = new PasswordHandler(Password!);
 
@@ -30,7 +30,7 @@ public class UserDto : IDto<User>
 
         var password = passwordHandler.Hash;
 
-        return new User
+        return new Entities.User
         {
             Name = Name!,
             Id = Id,

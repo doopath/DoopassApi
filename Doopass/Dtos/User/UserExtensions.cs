@@ -1,10 +1,10 @@
 using Doopass.Entities;
 
-namespace Doopass.Dtos.UserDto;
+namespace Doopass.Dtos.User;
 
 public static class UserExtensions
 {
-    public static UserDto ToDto(this User user)
+    public static UserDto ToDto(this Entities.User user)
     {
         return new()
         {

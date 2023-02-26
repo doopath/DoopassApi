@@ -3,7 +3,7 @@
 ## Preview
 
 Everyone likes code pics
-![no image](https://raw.githubusercontent.com/doopath/DoopassApi/master/Assets/Preview.png)
+![no image](https://raw.githubusercontent.com/doopath/DoopassApi/master/Assets/preview.png)
 
 ## Summary
 
