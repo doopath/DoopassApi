@@ -47,7 +47,7 @@ public class UsersRepository : EntityRepository<User>
         if (user.Email != userToUpdate.Email && DoesEmailExist(context, user.Email!))
             throw new EmailAlreadyExistsException($"User with email={user.Email} already exists!");
 
-        userToUpdate.UpdateOf(user.ToUpdateDto());
+        userToUpdate.UpdateOf(user);
         
         await context.SaveChangesAsync();
         

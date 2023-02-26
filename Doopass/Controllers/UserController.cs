@@ -3,7 +3,6 @@ using Doopass.Repositories;
 using Doopass.Dtos.UserDto;
 using Doopass.Entities;
 using Doopass.Exceptions;
-using Doopass.Models;
 using Doopass.Options;
 using Doopass.Requests.User;
 using MediatR;
@@ -31,94 +30,71 @@ public class UserController : BaseController
         try
         {
             User user = await _mediator.Send(request);
+            
             return new ActionResult<UserDto>(user.ToDto());
         }
         catch (EmailAlreadyExistsException exc)
         {
-            _logger.LogWarning(exc.Message);
-            return new ConflictObjectResult(exc.Message);
+            return HandleException(exc);
         }
     }
     
     [HttpPost]
-    public async Task<ActionResult<string>> RemoveUser([FromForm] int id = 0)
+    public async Task<ActionResult<string>> RemoveUser(RemoveUserRequest request)
     {
-        _logger.LogInformation("Removing user with id={Id}", id);
-        
         try
         {
-            var user = await _repository.GetById(id);
-            await _repository.Remove(user);
-            return new ActionResult<string>($"User with id={id} was successfully removed!");
+            await _mediator.Send(request);
+            
+            return new ActionResult<string>($"User with id={request.Id} has been successfully removed");
         }
         catch (EntityWasNotFoundException exc)
         {
-            _logger.LogWarning(exc.Message);
-            return new NotFoundObjectResult(exc.Message);
+            return HandleException(exc);
         }
     }
 
     [HttpPost]
-    public async Task<ActionResult<NewUserDto>> UpdateUser(UpdateUserDto updateUserDto)
+    public async Task<ActionResult<UserDto>> UpdateUser(UpdateUserRequest request)
     {
-        _logger.LogInformation("Updating user with id={Id}", updateUserDto.Id!.Value);
-        
         try
         {
-            var targetUser = await _repository.GetById(updateUserDto.Id.Value);
-            var user = updateUserDto.ToEntity();
+            User user = await _mediator.Send(request);
             
-            EnsurePasswordsMatch(user.Password!, targetUser.Password!);
-            
-            user = await _repository.Update(user);
-            
-            return new ActionResult<NewUserDto>(user.ToNewDto());
+            return new ActionResult<UserDto>(user.ToDto());
         }
         catch (Exception exc) when (exc is EntityWasNotFoundException
                                         or EmailAlreadyExistsException
                                         or PasswordValidationException)
         {
-            _logger.LogWarning(exc.Message);
-            return new ConflictObjectResult(exc.Message);
+            return HandleException(exc);
         }
     }
 
     [HttpPost]
-    public async Task<ActionResult> UpdateUserPassword(UpdateUserPasswordDto updateUserPasswordDto)
+    public async Task<ActionResult> UpdateUserPassword(UpdateUserPasswordRequest request)
     {
-        _logger.LogWarning("Updating password of a user with id={Id}", updateUserPasswordDto.Id);
-       
         try
         {
-            var updates = updateUserPasswordDto.ToEntity();
-            var updatingUser = await _repository.GetById(updates.Id!.Value);
-            var oldPasswordHash = new PasswordHandler(updateUserPasswordDto.OldPassword).Hash;
-
-            EnsurePasswordsMatch(updatingUser.Password!, oldPasswordHash);
-            await _repository.Update(updates);
-
-            _logger.LogInformation(
-                "Password of the user with id={Id} has been successfully updated!", updates.Id);
-            
+            await _mediator.Send(request);
             return new OkResult();
         }
         catch (Exception exc) when (exc is EntityWasNotFoundException
                                         or EmailAlreadyExistsException
                                         or PasswordValidationException)
         {
-            _logger.LogWarning(exc.Message);
-            
-            if (exc is EntityWasNotFoundException)
-                return new NotFoundObjectResult(exc.Message);
-            
-            return new ConflictObjectResult(exc.Message);
+            return HandleException(exc);
         }
     }
     #endregion 
     
-    private void EnsurePasswordsMatch(string sample, string target)
+    private ActionResult HandleException(Exception exc)
     {
-        if (!sample.Equals(target))
-            throw new PasswordValidationException("Cannot update user data! Wrong password!");
+        _logger.LogWarning(exc.Message);
+        
+        if (exc is EntityWasNotFoundException)
+            return new NotFoundObjectResult(exc.Message);
+        
+        return new ConflictObjectResult(exc.Message);
     }
 }

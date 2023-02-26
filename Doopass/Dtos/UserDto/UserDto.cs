@@ -6,11 +6,11 @@ namespace Doopass.Dtos.UserDto;
 
 public class UserDto : IDto<User>
 {
-    public virtual string? Name { get; set; }
-    public virtual int? Id { get; set; }
-    public virtual string? Email { get; set; }
-    public virtual bool IsEmailVerified { get; set; }
-    public virtual string? Password { get; set; }
+    public string? Name { get; init; }
+    public int? Id { get; init; }
+    public string? Email { get; init; }
+    public bool IsEmailVerified { get; init; }
+    public string? Password { get; init; }
     
     public User ToEntity()
     {
