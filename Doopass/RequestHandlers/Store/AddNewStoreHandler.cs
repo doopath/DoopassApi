@@ -1,4 +1,5 @@
 using System.Globalization;
+using Doopass.Exceptions;
 using Doopass.Models;
 using Doopass.Options;
 using Doopass.Repositories;
@@ -43,20 +44,40 @@ public class AddNewStoreHandler : IRequestHandler<AddNewStoreRequest, Unit>
     {
         var storeFilePath = GetStoreFilePath(request.UserId);
         var updateDate = GetUpdateDate();
-        
-        await _storesRepository.Add(new Entities.Store()
+        var store = new Entities.Store()
         {
             Id = null,
             UserId = request.UserId,
             User = null,
             FilePath = storeFilePath,
             LastUpdateDate = updateDate,
-        });
+        };
+
+
+        await EnsureUserExists(request);
+        await _storesRepository.Add(store);
+        await PinStore(store, request);
     }
 
-    private async Task PinStore(AddNewStoreRequest request)
+    private async Task EnsureUserExists(AddNewStoreRequest request)
     {
-        
+        if (!await _usersRepository.DoesEntityExist(request.UserId))
+            throw new EntityWasNotFoundException($"User with id={request.UserId} was not found!");
+    }
+
+    private async Task PinStore(Entities.Store store, AddNewStoreRequest request)
+    {
+        await _usersRepository.Update(new Entities.User
+                {
+                    Id = request.UserId,
+                    Name = null,
+                    Email = null,
+                    IsEmailVerified = false,
+                    Password = new PasswordHandler(request.UserPassword).Hash,
+                    Store = store,
+                    StoreId = store.Id,
+                    BackupsIds = null
+                });
     }
 
     private string GetUpdateDate()
@@ -64,7 +85,7 @@ public class AddNewStoreHandler : IRequestHandler<AddNewStoreRequest, Unit>
 
     private string GenerateStoreFileName(int userId)
     {
-        var idHash = new Hash(userId.ToString()).ToString();
+        var idHash = Hash.GenHash(userId.ToString());
         
         return $"{idHash}.enc";
     }

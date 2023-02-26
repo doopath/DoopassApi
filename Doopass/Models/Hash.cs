@@ -2,31 +2,33 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Doopass.Models;
+using BCrypt.Net;
 
-public class Hash
+public static class Hash
 {
-    protected readonly string HashingData;
+    public static string GenSecureHash(string hashingData)
+        => ToSecureHash(hashingData);
 
-    public Hash(string hashingData)
-    {
-        HashingData = hashingData;
-    }
+    public static string GenHash(string hashingData)
+        => ToSHA256(hashingData);
 
-    public override string ToString()
-        => ToSHA256();
+    public static bool CompareSecureHash(string sampleHash, string targetData)
+        => BCrypt.EnhancedVerify(targetData, sampleHash);
+
+    public static bool CompareHash(string sampleHash, string targetData)
+        => sampleHash.Equals(ToSHA256(targetData));
     
-    protected virtual string ToSHA256()
+    private static string ToSecureHash(string hashingData)
+        => BCrypt.EnhancedHashPassword(hashingData);
+    
+    private static string ToSHA256(string hashingData)
     {
         var builder = new StringBuilder();
+        var enc = Encoding.UTF8;
+        var result = SHA256.HashData(enc.GetBytes(hashingData));
 
-        using (var hash = SHA256.Create())
-        {
-            var enc = Encoding.UTF8;
-            var result = hash.ComputeHash(enc.GetBytes(HashingData));
-
-            foreach (var b in result)
-                builder.Append(b.ToString("x2"));
-        }
+        foreach (var b in result)
+            builder.Append(b.ToString("x2"));
 
         return builder.ToString();
     }

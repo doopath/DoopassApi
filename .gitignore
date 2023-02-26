@@ -4,6 +4,7 @@
 .fleet/
 Doopass/Properties/
 Doopass/appsettings.Development.json
+Doopass.sln.DotSettings.user
 
 # Development scripts
 dbCompose.yml
@@ -13,3 +14,6 @@ add_users.py
 */bin/
 */obj/
 publish/
+BCrypt/Release/
+BCrypt/*/bin/
+BCrypt/*/obj/

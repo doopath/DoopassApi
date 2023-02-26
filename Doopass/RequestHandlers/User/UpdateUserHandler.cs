@@ -22,9 +22,8 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Entities.Use
         _logger.LogInformation("Updating user with id={Id}", request.Id);
 
         var user = ConvertRequestToUser(request);
-        var targetUser = await _repository.GetById(user.Id!.Value);
 
-        EnsurePasswordsMatch(user.Password!, targetUser.Password!);
+        EnsurePasswordsMatch(user.Password!, request.Password);
 
         user = await _repository.Update(user);
 
@@ -49,7 +48,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Entities.Use
 
     private void EnsurePasswordsMatch(string sample, string target)
     {
-        if (!sample.Equals(target))
+        if (!PasswordHandler.CompareHash(sample, target))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }
 }

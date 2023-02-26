@@ -8,14 +8,24 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(user => user.Id);
+        builder.ToTable("Users");
+            
         builder.HasIndex(user => user.Id).IsUnique();
+        builder
+            .HasOne<Store>(user => user.Store)
+            .WithOne(store => store.User)
+            .HasForeignKey<Store>(store => store.UserId);
+        
+        builder.HasKey(user => user.Id);
+        
+        builder.Property(user => user.Name).IsRequired();
+        builder.Property(user => user.Email).IsRequired();
+        builder.Property(user => user.Id).IsRequired();
+        builder.Property(user => user.IsEmailVerified).IsRequired();
+        builder.Property(user => user.Password).IsRequired();
 
-        builder.HasKey(user => user.Name);
         builder.Property(user => user.Name).HasMaxLength(255);
-
-        builder.HasKey(user => user.Email);
-        builder.HasIndex(user => user.Email).IsUnique();
         builder.Property(user => user.Email).HasMaxLength(255);
+        builder.Property(user => user.Password).IsFixedLength();
     }
 }

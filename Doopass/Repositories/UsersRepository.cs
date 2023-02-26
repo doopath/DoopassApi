@@ -60,5 +60,11 @@ public class UsersRepository : EntityRepository<User>
         return userToUpdate;
     }
 
+    public async Task<bool> DoesEntityExist(int id)
+    {
+        await using var context = new DoopassContext(Options);
+
+        return context.Users!.AsParallel().Any(user => user.Id == id);
+    }
     #endregion
 }

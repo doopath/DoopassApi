@@ -18,15 +18,15 @@ public class StoreController : BaseController
     [HttpPost]
     public async Task<ActionResult> AddNewStore(AddNewStoreRequest request)
     {
-        // try
-        // {
+        try
+        {
             await _mediator.Send(request);
             return new OkObjectResult($"New store for user with id={request.UserId} has been added successfully");
-        // }
-        // catch (Exception exc)
-        // {
-        //     _logger.LogWarning(exc.Message);
-        //     return new ConflictObjectResult(exc.Message);
-        // }
+        }
+        catch (Exception exc)
+        {
+            _logger.LogWarning(exc.Message);
+            return new ConflictObjectResult(exc.Message);
+        }
     }
 }

@@ -16,7 +16,7 @@ public class UpdateUserRequest : IRequest<Entities.User>
 
     public required string Password { get; set; }
 
-    public Store? Store { get; set; }
+    public Entities.Store? Store { get; set; }
 
     public List<int>? BackupsIds { get; set; }
 }

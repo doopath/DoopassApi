@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-
 namespace Doopass.Models;
 
 public class PasswordHandler
@@ -12,9 +9,12 @@ public class PasswordHandler
         Password = password;
     }
 
-    public virtual string Hash => GetHash();
+    public virtual string Hash => Doopass.Models.Hash.GenSecureHash(Password);
     public virtual bool IsValid => Validate();
     public virtual string? ValidationMessage { get; private set; }
+
+    public static bool CompareHash(string sampleHash, string targetData)
+        => Models.Hash.CompareSecureHash(sampleHash, targetData);
 
     protected virtual bool Validate()
     {
@@ -25,21 +25,5 @@ public class PasswordHandler
             ValidationMessage = "Password must not contain spaces!";
 
         return ValidationMessage is null;
-    }
-
-    protected virtual string GetHash()
-    {
-        var builder = new StringBuilder();
-
-        using (var hash = SHA256.Create())
-        {
-            var enc = Encoding.UTF8;
-            var result = hash.ComputeHash(enc.GetBytes(Password));
-
-            foreach (var b in result)
-                builder.Append(b.ToString("x2"));
-        }
-
-        return builder.ToString();
     }
 }

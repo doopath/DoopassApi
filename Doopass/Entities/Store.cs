@@ -6,9 +6,8 @@ namespace Doopass.Entities;
 [Table("Stores")]
 public class Store : IEntity
 {
-    public int UserId { get; set; }
-
-    [ForeignKey("UserId")] public required User User { get; set; }
+    public int? UserId { get; set; }
+    public required User? User { get; set; }
 
     public required string FilePath { get; set; }
 

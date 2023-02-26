@@ -1,8 +1,9 @@
-using Doopass.Dtos.UserDto;
+using Microsoft.AspNetCore.Mvc;
+using Doopass.Dtos.User;
+using Doopass.Entities;
 using Doopass.Exceptions;
 using Doopass.Requests.User;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Doopass.Controllers;
 
@@ -16,26 +17,15 @@ public class UserController : BaseController
         _logger = logger;
         _mediator = mediator;
     }
-
-    private ActionResult HandleException(Exception exc)
-    {
-        _logger.LogWarning(exc.Message);
-
-        if (exc is EntityWasNotFoundException)
-            return new NotFoundObjectResult(exc.Message);
-
-        return new ConflictObjectResult(exc.Message);
-    }
-
+    
     #region Actions
-
     [HttpPost]
     public async Task<ActionResult<UserDto>> AddNewUser(AddNewUserRequest request)
     {
         try
         {
-            var user = await _mediator.Send(request);
-
+            User user = await _mediator.Send(request);
+            
             return new ActionResult<UserDto>(user.ToDto());
         }
         catch (EmailAlreadyExistsException exc)
@@ -43,14 +33,14 @@ public class UserController : BaseController
             return HandleException(exc);
         }
     }
-
+    
     [HttpPost]
     public async Task<ActionResult<string>> RemoveUser(RemoveUserRequest request)
     {
         try
         {
             await _mediator.Send(request);
-
+            
             return new ActionResult<string>($"User with id={request.Id} has been successfully removed");
         }
         catch (EntityWasNotFoundException exc)
@@ -64,8 +54,8 @@ public class UserController : BaseController
     {
         try
         {
-            var user = await _mediator.Send(request);
-
+            User user = await _mediator.Send(request);
+            
             return new ActionResult<UserDto>(user.ToDto());
         }
         catch (Exception exc) when (exc is EntityWasNotFoundException
@@ -91,6 +81,15 @@ public class UserController : BaseController
             return HandleException(exc);
         }
     }
-
-    #endregion
+    #endregion 
+    
+    private ActionResult HandleException(Exception exc)
+    {
+        _logger.LogWarning(exc.Message);
+        
+        if (exc is EntityWasNotFoundException)
+            return new NotFoundObjectResult(exc.Message);
+        
+        return new ConflictObjectResult(exc.Message);
+    }
 }

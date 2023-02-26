@@ -1,4 +1,5 @@
 using Doopass.Entities;
+using Doopass.EntityTypeConfigurations;
 using Doopass.Options;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +12,17 @@ public sealed class DoopassContext : DbContext
     public DoopassContext(DbOptions options)
     {
         _options = options;
-        Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 
     public DbSet<User>? Users { get; set; }
     public DbSet<Store>? Stores { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        new UserConfiguration().Configure(modelBuilder.Entity<User>());
+        new StoreConfiguration().Configure(modelBuilder.Entity<Store>());
+    }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

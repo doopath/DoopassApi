@@ -58,9 +58,7 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
 
     private void EnsurePasswordsMatch(Entities.User existingUser, UpdateUserPasswordRequest request)
     {
-        var oldPasswordHash = new PasswordHandler(request.OldPassword).Hash;
-
-        if (!existingUser.Password!.Equals(oldPasswordHash))
+        if (!PasswordHandler.CompareHash(existingUser.Password!, request.OldPassword))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }
 }
