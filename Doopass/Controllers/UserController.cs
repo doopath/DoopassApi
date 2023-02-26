@@ -1,24 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using Doopass.Repositories;
 using Doopass.Dtos.UserDto;
 using Doopass.Entities;
 using Doopass.Exceptions;
-using Doopass.Options;
 using Doopass.Requests.User;
 using MediatR;
-using Microsoft.Extensions.Options;
 
 namespace Doopass.Controllers;
 
 public class UserController : BaseController
 {
-    private readonly UsersRepository _repository;
     private readonly ILogger<UserController> _logger;
     private readonly IMediator _mediator;
 
-    public UserController(IOptions<DbOptions> dbOptions, ILogger<UserController> logger, IMediator mediator)
+    public UserController(ILogger<UserController> logger, IMediator mediator)
     {
-        _repository = new UsersRepository(dbOptions);
         _logger = logger;
         _mediator = mediator;
     }

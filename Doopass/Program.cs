@@ -10,18 +10,18 @@ public static class Program
     private static WebApplication? App { get; set; }
     private static string[]? Args { get; set; }
     
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         InitializeArguments(args);
         InitializeApplicationBuilder();
         ConfigureServices();
         ConfigureApplication();
-        RunApplication();        
+        await RunApplication();        
     }
 
-    private static void RunApplication()
+    private static async Task RunApplication()
     {
-        App!.Run();
+        await App!.RunAsync();
     }
 
     private static void InitializeArguments(string[] args)
@@ -61,8 +61,7 @@ public static class Program
 
         App.UseHttpsRedirection();
         App.UseStaticFiles();
-        App.UseAuthorization();
         App.UseRouting();
-        App.MapControllerRoute(name: "default", pattern: "{controller=Info}/{action=GetUsageInfo}/{id?}");
+        App.UseAuthorization();
     }
 }
