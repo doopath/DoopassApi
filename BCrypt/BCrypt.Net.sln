@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 15.0.26228.4
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BCrypt.Net", "BCrypt.Net\BCrypt.Net.csproj", "{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build-tools", "build-tools", "{6F3D5F8B-CD73-474C-BA79-D4A17E9F106D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\readme.md = ..\readme.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Benchmark|Any CPU = Benchmark|Any CPU
+		Benchmark|x64 = Benchmark|x64
+		Benchmark|x86 = Benchmark|x86
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|x64.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|x64.Build.0 = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|x86.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Benchmark|x86.Build.0 = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|x64.Build.0 = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD69F016-5940-4FCA-BCA1-9D1D87C6F873}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5ADD1E2-61BB-4575-B5D8-78FB549A4DBC}
+	EndGlobalSection
+EndGlobal
