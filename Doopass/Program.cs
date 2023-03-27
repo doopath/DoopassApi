@@ -39,10 +39,10 @@ public static class Program
         Builder!.Services.Configure<DbOptions>(Builder.Configuration.GetSection(DbOptions.Position));
         Builder.Services.Configure<InfoOptions>(Builder.Configuration.GetSection(InfoOptions.Position));
         Builder.Services.Configure<PathOptions>(Builder.Configuration.GetSection(PathOptions.Position));
-        
+
         Builder.Services.AddScoped<UsersRepository, UsersRepository>();
         Builder.Services.AddScoped<StoresRepository, StoresRepository>();
-        
+
         Builder.Services.AddControllers();
         Builder.Services.AddEndpointsApiExplorer();
         Builder.Services.AddSwaggerGen();

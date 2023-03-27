@@ -21,7 +21,7 @@ public class StoreController : BaseController
         try
         {
             await _mediator.Send(request);
-            return new OkObjectResult($"New store for user with id={request.UserId} has been added successfully");
+            return new OkObjectResult($"A new store for the user with id={request.UserId} has been added successfully");
         }
         catch (Exception exc)
         {

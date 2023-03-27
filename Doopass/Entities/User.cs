@@ -11,10 +11,11 @@ public class User : IEntity
 
     public required bool IsEmailVerified { get; set; }
 
-    public required string? Password { get; set; }
+    public required string Password { get; set; }
 
-    public int? StoreId { get; set; }
-    public required Store? Store { get; set; }
+    public Store? Store { get; set; }
+    
+    public required int? StoreId { get; set; }
 
     public required List<int>? BackupsIds { get; set; }
 
@@ -24,7 +25,7 @@ public class User : IEntity
     {
         Name = from.Name ?? Name;
         Email = from.Email ?? Email;
-        Password = from.Password ?? Password;
+        Password = from.Password;
         Store = from.Store ?? Store;
         BackupsIds = from.BackupsIds ?? BackupsIds;
 

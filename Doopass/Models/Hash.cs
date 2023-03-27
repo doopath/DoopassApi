@@ -2,25 +2,34 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Doopass.Models;
-using BCrypt.Net;
 
 public static class Hash
 {
     public static string GenSecureHash(string hashingData)
-        => ToSecureHash(hashingData);
+    {
+        return ToSecureHash(hashingData);
+    }
 
     public static string GenHash(string hashingData)
-        => ToSHA256(hashingData);
+    {
+        return ToSHA256(hashingData);
+    }
 
     public static bool CompareSecureHash(string sampleHash, string targetData)
-        => BCrypt.EnhancedVerify(targetData, sampleHash);
+    {
+        return BCrypt.Net.BCrypt.EnhancedVerify(targetData, sampleHash);
+    }
 
     public static bool CompareHash(string sampleHash, string targetData)
-        => sampleHash.Equals(ToSHA256(targetData));
-    
+    {
+        return sampleHash.Equals(ToSHA256(targetData));
+    }
+
     private static string ToSecureHash(string hashingData)
-        => BCrypt.EnhancedHashPassword(hashingData);
-    
+    {
+        return BCrypt.Net.BCrypt.EnhancedHashPassword(hashingData);
+    }
+
     private static string ToSHA256(string hashingData)
     {
         var builder = new StringBuilder();

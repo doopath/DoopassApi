@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Doopass.Entities;
 using MediatR;
 
 namespace Doopass.Requests.User;
@@ -16,7 +15,7 @@ public class UpdateUserRequest : IRequest<Entities.User>
 
     public required string Password { get; set; }
 
-    public Entities.Store? Store { get; set; }
+    public int? StoreId { get; set; }
 
     public List<int>? BackupsIds { get; set; }
 }

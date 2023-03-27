@@ -9,15 +9,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.ToTable("Users");
-            
+
         builder.HasIndex(user => user.Id).IsUnique();
         builder
             .HasOne<Store>(user => user.Store)
             .WithOne(store => store.User)
             .HasForeignKey<Store>(store => store.UserId);
-        
+
         builder.HasKey(user => user.Id);
-        
+
         builder.Property(user => user.Name).IsRequired();
         builder.Property(user => user.Email).IsRequired();
         builder.Property(user => user.Id).IsRequired();

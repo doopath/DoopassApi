@@ -51,7 +51,7 @@ public class UpdateUserPasswordHandler : IRequestHandler<UpdateUserPasswordReque
             // email is not verified this will still be false.
             IsEmailVerified = true,
             Password = password,
-            Store = null,
+            StoreId = null,
             BackupsIds = null
         };
     }

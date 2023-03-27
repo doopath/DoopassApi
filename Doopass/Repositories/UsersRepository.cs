@@ -66,5 +66,6 @@ public class UsersRepository : EntityRepository<User>
 
         return context.Users!.AsParallel().Any(user => user.Id == id);
     }
+
     #endregion
 }

@@ -14,7 +14,6 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
         builder
             .HasOne<User>(store => store.User)
             .WithOne(user => user.Store)
-            .IsRequired()
             .HasForeignKey<User>(user => user.StoreId);
 
         builder.Property(store => store.Id).IsRequired();

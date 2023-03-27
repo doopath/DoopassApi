@@ -9,6 +9,7 @@ Doopass.sln.DotSettings.user
 # Development scripts
 dbCompose.yml
 add_users.py
+run
 
 # Build dirs
 */bin/
@@ -17,3 +18,6 @@ publish/
 BCrypt/Release/
 BCrypt/*/bin/
 BCrypt/*/obj/
+
+build.log
+.fake

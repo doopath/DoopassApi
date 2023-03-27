@@ -32,9 +32,7 @@ public class RemoveUserHandler : IRequestHandler<RemoveUserRequest, Unit>
 
     private void EnsurePasswordsMatch(Entities.User user, RemoveUserRequest request)
     {
-        var requestPasswordHash = new PasswordHandler(request.Password).Hash;
-
-        if (!user.Password!.Equals(requestPasswordHash))
+        if (!PasswordHandler.CompareHash(user.Password, request.Password))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }
 }

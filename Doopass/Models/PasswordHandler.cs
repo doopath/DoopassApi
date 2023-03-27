@@ -9,12 +9,14 @@ public class PasswordHandler
         Password = password;
     }
 
-    public virtual string Hash => Doopass.Models.Hash.GenSecureHash(Password);
+    public virtual string Hash => Models.Hash.GenSecureHash(Password);
     public virtual bool IsValid => Validate();
     public virtual string? ValidationMessage { get; private set; }
 
     public static bool CompareHash(string sampleHash, string targetData)
-        => Models.Hash.CompareSecureHash(sampleHash, targetData);
+    {
+        return Models.Hash.CompareSecureHash(sampleHash, targetData);
+    }
 
     protected virtual bool Validate()
     {

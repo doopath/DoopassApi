@@ -17,7 +17,7 @@ public class UserDto : IDto<Entities.User>
 
     [StringLength(64)] public string? Password { get; init; }
 
-    public Store? Store { get; set; }
+    public int? StoreId { get; set; }
 
     public List<int>? BackupsIds { get; set; }
 
@@ -37,7 +37,7 @@ public class UserDto : IDto<Entities.User>
             Email = Email!,
             IsEmailVerified = IsEmailVerified,
             Password = password,
-            Store = Store,
+            StoreId = StoreId,
             BackupsIds = BackupsIds!
         };
     }

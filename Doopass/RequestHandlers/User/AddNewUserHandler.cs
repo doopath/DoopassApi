@@ -47,7 +47,7 @@ public class AddNewUserHandler : IRequestHandler<AddNewUserRequest, Entities.Use
             Email = request.Email,
             IsEmailVerified = false,
             Password = password,
-            Store = null,
+            StoreId = null,
             BackupsIds = new List<int>()
         };
     }

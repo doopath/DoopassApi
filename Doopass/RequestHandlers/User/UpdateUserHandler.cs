@@ -19,15 +19,15 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Entities.Use
 
     public async Task<Entities.User> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Updating user with id={Id}", request.Id);
+        _logger.LogInformation("Updating user with id={Id}", request.Id.ToString());
 
         var user = ConvertRequestToUser(request);
 
-        EnsurePasswordsMatch(user.Password!, request.Password);
+        EnsurePasswordsMatch(user, request);
 
         user = await _repository.Update(user);
 
-        _logger.LogInformation("User with id={Id} has been successfully updated!", user.Id);
+        _logger.LogInformation("User with id={Id} has been successfully updated!", user.Id.ToString());
 
         return user;
     }
@@ -41,14 +41,14 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Entities.Use
             Email = request.Email,
             IsEmailVerified = request.IsEmailVerified,
             Password = new PasswordHandler(request.Password).Hash,
-            Store = request.Store,
+            StoreId = request.StoreId,
             BackupsIds = request.BackupsIds
         };
     }
 
-    private void EnsurePasswordsMatch(string sample, string target)
+    private void EnsurePasswordsMatch(Entities.User user, UpdateUserRequest request)
     {
-        if (!PasswordHandler.CompareHash(sample, target))
+        if (!PasswordHandler.CompareHash(user.Password!, request.Password))
             throw new PasswordValidationException("Cannot update user data! Wrong password!");
     }
 }

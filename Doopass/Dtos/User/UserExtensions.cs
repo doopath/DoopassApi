@@ -1,12 +1,10 @@
-using Doopass.Entities;
-
 namespace Doopass.Dtos.User;
 
 public static class UserExtensions
 {
     public static UserDto ToDto(this Entities.User user)
     {
-        return new()
+        return new UserDto
         {
             Name = user.Name,
             Id = user.Id!.Value,
@@ -14,7 +12,7 @@ public static class UserExtensions
             IsEmailVerified = user.IsEmailVerified,
             Password = user.Password,
             BackupsIds = user.BackupsIds,
-            Store = user.Store
+            StoreId = user.StoreId
         };
     }
 }

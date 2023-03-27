@@ -7,5 +7,6 @@ namespace Doopass.Repositories;
 public class StoresRepository : EntityRepository<Store>
 {
     public StoresRepository(IOptions<DbOptions> options) : base(options)
-    { }
+    {
+    }
 }
